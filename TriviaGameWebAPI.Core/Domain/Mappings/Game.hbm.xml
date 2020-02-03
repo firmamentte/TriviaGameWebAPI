@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <!--Build: with Firmament Nhibernate template-->
+  <class name="TriviaGameWebAPI.Core.Game,TriviaGameWebAPI.Core" table="`Game`" lazy="true">
+    <id name="GameId" column="GameId" type="Guid" unsaved-value="{00000000-0000-0000-0000-000000000000}">
+      <generator class="guid" />
+    </id>
+    <many-to-one name="Genre" column="GenreId" cascade="save-update" not-null="true" />
+    <property name="CreationDate" column="CreationDate" type="DateTime" not-null="true" />
+    <bag name="Answers" inverse="true" lazy="true" cascade="delete">
+      <key column="GameId" />
+      <one-to-many class="TriviaGameWebAPI.Core.Answer,TriviaGameWebAPI.Core" />
+    </bag>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Domain\Mappings\Answer.hbm.xml" />
+    <None Remove="Domain\Mappings\Choice.hbm.xml" />
+    <None Remove="Domain\Mappings\Game.hbm.xml" />
+    <None Remove="Domain\Mappings\Genre.hbm.xml" />
+    <None Remove="Domain\Mappings\Question.hbm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Answer.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\Choice.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\Game.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\Genre.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\Question.hbm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+</Project>
