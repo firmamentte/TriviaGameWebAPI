@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TriviaGameWebAPI.BLL;
@@ -18,7 +19,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/GetGenres")]
         [HttpGet]
-        public ActionResult<IEnumerable<GenreResp>> GetGenres()
+        public async Task<ActionResult<IEnumerable<GenreResp>>> GetGenres()
         {
             try
             {
@@ -26,7 +27,7 @@ namespace TriviaGameWebAPI.Controllers
 
                 #endregion
 
-                return Ok(TriviaGameWebAPIBLL.GenreHelper.GetGenres());
+                return Ok(await TriviaGameWebAPIBLL.GenreHelper.GetGenres());
             }
             catch (Exception)
             {
@@ -36,7 +37,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/CreateGame")]
         [HttpPost]
-        public ActionResult<GameResp> CreateGame([FromBody]string genreName)
+        public async Task<ActionResult<GameResp>> CreateGame([FromBody]string genreName)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace TriviaGameWebAPI.Controllers
 
                 #endregion
 
-                GameResp _gameResp = TriviaGameWebAPIBLL.GameHelper.CreateGame(genreName);
+                GameResp _gameResp = await TriviaGameWebAPIBLL.GameHelper.CreateGame(genreName);
 
                 return Created($"{Request.Scheme}://{Request.Host.Value}/api/TriviaGame/V1/ViewGame?gameId={ _gameResp.GameId }", _gameResp);
 
@@ -69,7 +70,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/AnswerQuestion")]
         [HttpPut]
-        public ActionResult<bool> AnswerQuestion([FromBody]AnswerQuestionReq answerQuestionReq)
+        public async Task<ActionResult<bool>> AnswerQuestion([FromBody]AnswerQuestionReq answerQuestionReq)
         {
             try
             {
@@ -114,7 +115,7 @@ namespace TriviaGameWebAPI.Controllers
 
                 #endregion
 
-                return Ok(TriviaGameWebAPIBLL.GameHelper.AnswerQuestion(answerQuestionReq));
+                return Ok(await TriviaGameWebAPIBLL.GameHelper.AnswerQuestion(answerQuestionReq));
             }
             catch (Exception)
             {
@@ -124,7 +125,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/ViewGame")]
         [HttpGet]
-        public ActionResult<GameResultResp> ViewGame([FromQuery]Guid gameId)
+        public async Task<ActionResult<GameResultResp>> ViewGame([FromQuery]Guid gameId)
         {
             try
             {
@@ -144,7 +145,7 @@ namespace TriviaGameWebAPI.Controllers
 
                 #endregion
 
-                return Ok(TriviaGameWebAPIBLL.GameHelper.ViewGame(gameId));
+                return Ok(await TriviaGameWebAPIBLL.GameHelper.ViewGame(gameId));
             }
             catch (Exception)
             {
