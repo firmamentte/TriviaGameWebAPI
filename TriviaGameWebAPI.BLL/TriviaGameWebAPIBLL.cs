@@ -21,18 +21,6 @@ namespace TriviaGameWebAPI.BLL
             await NHibernateSessionManager.Instance.CommitTransaction();
         }
 
-        private static void RaiseServerError(string errorMessage)
-        {
-            try
-            {
-                throw new TriviaGameWebAPIException(errorMessage);
-            }
-            catch (TriviaGameWebAPIException)
-            {
-                throw;
-            }
-        }
-
         public static void InitialiseAppSettings(IConfiguration configuration)
         {
             try
