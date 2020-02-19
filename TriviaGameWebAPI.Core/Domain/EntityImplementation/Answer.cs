@@ -61,7 +61,10 @@ namespace TriviaGameWebAPI.Core
         {
             get
             {
-                return QuestionDuration - AnswerDuration;
+                if (IsAnswerCorrect)
+                    return QuestionDuration - AnswerDuration;
+                else
+                    return 0;
             }
         }
     }

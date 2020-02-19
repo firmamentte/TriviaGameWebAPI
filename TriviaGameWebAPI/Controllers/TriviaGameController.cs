@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -27,11 +29,24 @@ namespace TriviaGameWebAPI.Controllers
 
                 #endregion
 
-                return Ok(await TriviaGameWebAPIBLL.GenreHelper.GetGenres());
+                List<GenreResp> _genreResps = await TriviaGameWebAPIBLL.GenreHelper.GetGenres();
+
+                return Ok(new
+                {
+                    meta = new { code = HttpStatusCode.OK },
+                    data = _genreResps
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
 
@@ -52,19 +67,40 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        meta = new
+                        {
+                            code = HttpStatusCode.BadRequest,
+                            message = ControllerHelper.GetModelStateErrors(ModelState)
+                        }
+                    });
                 }
 
                 #endregion
 
                 GameResp _gameResp = await TriviaGameWebAPIBLL.GameHelper.CreateGame(genreName);
 
-                return Created($"{Request.Scheme}://{Request.Host.Value}/api/TriviaGame/V1/ViewGame?gameId={ _gameResp.GameId }", _gameResp);
-
+                return Created(string.Empty, new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.Created,
+                        url = $"{Request.Scheme}://{Request.Host.Value}/api/TriviaGame/V1/ViewGame?gameId={ _gameResp.GameId }"
+                    },
+                    data = _gameResp
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
 
@@ -110,16 +146,36 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        meta = new
+                        {
+                            code = HttpStatusCode.BadRequest,
+                            message = ControllerHelper.GetModelStateErrors(ModelState)
+                        }
+                    });
                 }
 
                 #endregion
 
-                return Ok(await TriviaGameWebAPIBLL.GameHelper.AnswerQuestion(answerQuestionReq));
+                bool _isCorrect = await TriviaGameWebAPIBLL.GameHelper.AnswerQuestion(answerQuestionReq);
+
+                return Ok(new
+                {
+                    meta = new { code = HttpStatusCode.OK },
+                    data = _isCorrect
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
 
@@ -140,16 +196,36 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        meta = new
+                        {
+                            code = HttpStatusCode.BadRequest,
+                            message = ControllerHelper.GetModelStateErrors(ModelState)
+                        }
+                    });
                 }
 
                 #endregion
 
-                return Ok(await TriviaGameWebAPIBLL.GameHelper.ViewGame(gameId));
+                GameResultResp _gameResultResp = await TriviaGameWebAPIBLL.GameHelper.ViewGame(gameId);
+
+                return Ok(new
+                {
+                    meta = new { code = HttpStatusCode.OK },
+                    data = _gameResultResp
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
     }
