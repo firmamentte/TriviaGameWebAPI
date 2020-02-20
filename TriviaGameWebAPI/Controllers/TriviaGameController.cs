@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TriviaGameWebAPI.BLL;
@@ -18,7 +20,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/GetGenres")]
         [HttpGet]
-        public ActionResult<IEnumerable<GenreResp>> GetGenres()
+        public async Task<ActionResult> GetGenres()
         {
             try
             {
@@ -26,17 +28,30 @@ namespace TriviaGameWebAPI.Controllers
 
                 #endregion
 
-                return Ok(TriviaGameWebAPIBLL.GenreHelper.GetGenres());
+                List<GenreResp> _genreResps = await TriviaGameWebAPIBLL.GenreHelper.GetGenres();
+
+                return Ok(new
+                {
+                    meta = new { code = HttpStatusCode.OK },
+                    data = _genreResps
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
 
         [Route("V1/CreateGame")]
         [HttpPost]
-        public ActionResult<GameResp> CreateGame([FromBody]string genreName)
+        public async Task<ActionResult> CreateGame([FromBody]string genreName)
         {
             try
             {
@@ -51,25 +66,45 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        meta = new
+                        {
+                            code = HttpStatusCode.BadRequest,
+                            message = ControllerHelper.GetModelStateErrors(ModelState)
+                        }
+                    });
                 }
 
                 #endregion
 
-                GameResp _gameResp = TriviaGameWebAPIBLL.GameHelper.CreateGame(genreName);
+                GameResp _gameResp = await TriviaGameWebAPIBLL.GameHelper.CreateGame(genreName);
 
-                return Created($"{Request.Scheme}://{Request.Host.Value}/api/TriviaGame/V1/ViewGame?gameId={ _gameResp.GameId }", _gameResp);
-
+                return Created(string.Empty, new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.Created
+                    },
+                    data = _gameResp
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
 
         [Route("V1/AnswerQuestion")]
         [HttpPut]
-        public ActionResult<bool> AnswerQuestion([FromBody]AnswerQuestionReq answerQuestionReq)
+        public async Task<ActionResult> AnswerQuestion([FromBody]AnswerQuestionReq answerQuestionReq)
         {
             try
             {
@@ -109,22 +144,42 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        meta = new
+                        {
+                            code = HttpStatusCode.BadRequest,
+                            message = ControllerHelper.GetModelStateErrors(ModelState)
+                        }
+                    });
                 }
 
                 #endregion
 
-                return Ok(TriviaGameWebAPIBLL.GameHelper.AnswerQuestion(answerQuestionReq));
+                bool _isCorrect = await TriviaGameWebAPIBLL.GameHelper.AnswerQuestion(answerQuestionReq);
+
+                return Ok(new
+                {
+                    meta = new { code = HttpStatusCode.OK },
+                    data = _isCorrect
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
 
         [Route("V1/ViewGame")]
         [HttpGet]
-        public ActionResult<GameResultResp> ViewGame([FromQuery]Guid gameId)
+        public async Task<ActionResult> ViewGame([FromQuery]Guid gameId)
         {
             try
             {
@@ -139,16 +194,36 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(new
+                    {
+                        meta = new
+                        {
+                            code = HttpStatusCode.BadRequest,
+                            message = ControllerHelper.GetModelStateErrors(ModelState)
+                        }
+                    });
                 }
 
                 #endregion
 
-                return Ok(TriviaGameWebAPIBLL.GameHelper.ViewGame(gameId));
+                GameResultResp _gameResultResp = await TriviaGameWebAPIBLL.GameHelper.ViewGame(gameId);
+
+                return Ok(new
+                {
+                    meta = new { code = HttpStatusCode.OK },
+                    data = _gameResultResp
+                });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new
+                {
+                    meta = new
+                    {
+                        code = HttpStatusCode.BadRequest,
+                        message = ex.Message
+                    }
+                });
             }
         }
     }

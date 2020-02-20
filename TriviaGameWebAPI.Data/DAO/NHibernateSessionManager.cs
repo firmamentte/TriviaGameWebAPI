@@ -3,6 +3,7 @@ using MyGeneration/Template/NHibernate (c) by Firmament
 */
 using NHibernate;
 using NHibernate.Cfg;
+using System.Threading.Tasks;
 using TriviaGameWebAPI.Core;
 
 namespace TriviaGameWebAPI.Data
@@ -91,15 +92,15 @@ namespace TriviaGameWebAPI.Data
             }
         }
 
-        public void CommitTransaction() {
+        public async Task CommitTransaction() {
             try {
                 if (HasOpenTransaction()) {
-                    Transaction.Commit();
+                   await Transaction.CommitAsync();
                 }
                 Transaction = null;
             }
             catch (HibernateException) {
-                RollbackTransaction();
+                await RollbackTransaction();
                 throw;
             }
         }
@@ -108,10 +109,10 @@ namespace TriviaGameWebAPI.Data
             return Transaction != null && !Transaction.WasCommitted && !Transaction.WasRolledBack;
         }
 
-        public void RollbackTransaction() {
+        public async Task RollbackTransaction() {
             try {
                 if (HasOpenTransaction()) {
-                    Transaction.Rollback();
+                    await Transaction.RollbackAsync();
                 }
                 Transaction = null;
             }

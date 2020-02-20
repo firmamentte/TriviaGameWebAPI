@@ -1,20 +1,21 @@
 
 using System;
+using System.Threading.Tasks;
 using TriviaGameWebAPI.Core;
 
 namespace TriviaGameWebAPI.Data
 {
     public static partial class TriviaGameWebAPIDAL
     {
-        public static Genre GetGenreByGenreName(string genreName)
+        public static async Task<Genre> GetGenreByGenreName(string genreName)
         {
             try
             {
                 return
-                NHibernateSessionManager.Instance.GetSession().
+                await NHibernateSessionManager.Instance.GetSession().
                 QueryOver<Genre>().
                 Where(genre => genre.GenreName == genreName).
-                SingleOrDefault();
+                SingleOrDefaultAsync();
             }
             catch (Exception)
             {
@@ -22,17 +23,19 @@ namespace TriviaGameWebAPI.Data
             }
         }
 
-        public static bool IsQuestionAnswered(Guid gameId, Guid questionId)
+        public static async Task<bool> IsQuestionAnswered(Guid gameId, Guid questionId)
         {
             try
             {
+                Question _question = await GetQuestionById(questionId);
+
                 return
-                NHibernateSessionManager.Instance.GetSession().
+                await NHibernateSessionManager.Instance.GetSession().
                 QueryOver<Answer>().
-                Where(answer => answer.Question == GetQuestionById(questionId)).
+                Where(answer => answer.Question == _question).
                 JoinQueryOver(answer => answer.Game).
                 Where(game => game.GameId == gameId).
-                SingleOrDefault() != null;
+                SingleOrDefaultAsync() != null;
             }
             catch (Exception)
             {

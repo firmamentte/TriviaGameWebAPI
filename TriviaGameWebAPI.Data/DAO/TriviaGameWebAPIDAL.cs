@@ -4,6 +4,7 @@ using MyGeneration/Template/NHibernate (c) by Firmament
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TriviaGameWebAPI.Core;
 
 namespace TriviaGameWebAPI.Data
@@ -17,220 +18,195 @@ namespace TriviaGameWebAPI.Data
  public static partial class TriviaGameWebAPIDAL 
      {
 
-	public static Answer RefreshAnswer(Answer inParam)
+		public static async Task RefreshAnswer(Answer inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Refresh(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().RefreshAsync(inParam);
 		}
-	public static void DeleteAnswer(Answer inParam)
+		public static async Task DeleteAnswer(Answer inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Delete(inParam);
+			await NHibernateSessionManager.Instance.GetSession().DeleteAsync(inParam);
 		}
-	public static List<Answer> GetAllAnswer()
+		public static async Task<List<Answer>> GetAllAnswer()
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Answer>().
-			List<Answer>().
-			ToList();
+			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-	public static Answer GetAnswerById(Guid Id)
+		public static async Task<Answer> GetAnswerById(Guid Id)
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Answer>().
 			Where(entity => entity.AnswerId == Id).
-			SingleOrDefault();
+			SingleOrDefaultAsync();
 		}
-	public static Answer SaveAnswer(Answer inParam)
+		public static async Task SaveAnswer(Answer inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(inParam);
 		}
-	public static Answer SaveTransientAnswer(Answer inParam)
+		public static async Task MergeAnswer(Answer inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Merge(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().MergeAsync(inParam);
 		}
-	public static IList<Answer> SaveAnswer(IList<Answer> inParam)
+		public static async Task SaveAnswer(List<Answer> inParam)
 		{
-			foreach (Answer aAnswer in inParam)
+			foreach (Answer _Answer in inParam)
 			{
-				NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(aAnswer);
+				await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(_Answer);
 			}
-			return inParam;
 		}
-	public static Choice RefreshChoice(Choice inParam)
+		public static async Task RefreshChoice(Choice inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Refresh(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().RefreshAsync(inParam);
 		}
-	public static void DeleteChoice(Choice inParam)
+		public static async Task DeleteChoice(Choice inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Delete(inParam);
+			await NHibernateSessionManager.Instance.GetSession().DeleteAsync(inParam);
 		}
-	public static List<Choice> GetAllChoice()
+		public static async Task<List<Choice>> GetAllChoice()
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Choice>().
-			List<Choice>().
-			ToList();
+			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-	public static Choice GetChoiceById(Guid Id)
+		public static async Task<Choice> GetChoiceById(Guid Id)
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Choice>().
 			Where(entity => entity.ChoiceId == Id).
-			SingleOrDefault();
+			SingleOrDefaultAsync();
 		}
-	public static Choice SaveChoice(Choice inParam)
+		public static async Task SaveChoice(Choice inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(inParam);
 		}
-	public static Choice SaveTransientChoice(Choice inParam)
+		public static async Task MergeChoice(Choice inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Merge(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().MergeAsync(inParam);
 		}
-	public static IList<Choice> SaveChoice(IList<Choice> inParam)
+		public static async Task SaveChoice(List<Choice> inParam)
 		{
-			foreach (Choice aChoice in inParam)
+			foreach (Choice _Choice in inParam)
 			{
-				NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(aChoice);
+				await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(_Choice);
 			}
-			return inParam;
 		}
-	public static Game RefreshGame(Game inParam)
+		public static async Task RefreshGame(Game inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Refresh(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().RefreshAsync(inParam);
 		}
-	public static void DeleteGame(Game inParam)
+		public static async Task DeleteGame(Game inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Delete(inParam);
+			await NHibernateSessionManager.Instance.GetSession().DeleteAsync(inParam);
 		}
-	public static List<Game> GetAllGame()
+		public static async Task<List<Game>> GetAllGame()
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Game>().
-			List<Game>().
-			ToList();
+			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-	public static Game GetGameById(Guid Id)
+		public static async Task<Game> GetGameById(Guid Id)
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Game>().
 			Where(entity => entity.GameId == Id).
-			SingleOrDefault();
+			SingleOrDefaultAsync();
 		}
-	public static Game SaveGame(Game inParam)
+		public static async Task SaveGame(Game inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(inParam);
 		}
-	public static Game SaveTransientGame(Game inParam)
+		public static async Task MergeGame(Game inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Merge(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().MergeAsync(inParam);
 		}
-	public static IList<Game> SaveGame(IList<Game> inParam)
+		public static async Task SaveGame(List<Game> inParam)
 		{
-			foreach (Game aGame in inParam)
+			foreach (Game _Game in inParam)
 			{
-				NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(aGame);
+				await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(_Game);
 			}
-			return inParam;
 		}
-	public static Genre RefreshGenre(Genre inParam)
+		public static async Task RefreshGenre(Genre inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Refresh(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().RefreshAsync(inParam);
 		}
-	public static void DeleteGenre(Genre inParam)
+		public static async Task DeleteGenre(Genre inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Delete(inParam);
+			await NHibernateSessionManager.Instance.GetSession().DeleteAsync(inParam);
 		}
-	public static List<Genre> GetAllGenre()
+		public static async Task<List<Genre>> GetAllGenre()
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Genre>().
-			List<Genre>().
-			ToList();
+			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-	public static Genre GetGenreById(Guid Id)
+		public static async Task<Genre> GetGenreById(Guid Id)
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Genre>().
 			Where(entity => entity.GenreId == Id).
-			SingleOrDefault();
+			SingleOrDefaultAsync();
 		}
-	public static Genre SaveGenre(Genre inParam)
+		public static async Task SaveGenre(Genre inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(inParam);
 		}
-	public static Genre SaveTransientGenre(Genre inParam)
+		public static async Task MergeGenre(Genre inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Merge(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().MergeAsync(inParam);
 		}
-	public static IList<Genre> SaveGenre(IList<Genre> inParam)
+		public static async Task SaveGenre(List<Genre> inParam)
 		{
-			foreach (Genre aGenre in inParam)
+			foreach (Genre _Genre in inParam)
 			{
-				NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(aGenre);
+				await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(_Genre);
 			}
-			return inParam;
 		}
-	public static Question RefreshQuestion(Question inParam)
+		public static async Task RefreshQuestion(Question inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Refresh(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().RefreshAsync(inParam);
 		}
-	public static void DeleteQuestion(Question inParam)
+		public static async Task DeleteQuestion(Question inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Delete(inParam);
+			await NHibernateSessionManager.Instance.GetSession().DeleteAsync(inParam);
 		}
-	public static List<Question> GetAllQuestion()
+		public static async Task<List<Question>> GetAllQuestion()
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Question>().
-			List<Question>().
-			ToList();
+			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-	public static Question GetQuestionById(Guid Id)
+		public static async Task<Question> GetQuestionById(Guid Id)
 		{
 			return
-			NHibernateSessionManager.Instance.GetSession().
+			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Question>().
 			Where(entity => entity.QuestionId == Id).
-			SingleOrDefault();
+			SingleOrDefaultAsync();
 		}
-	public static Question SaveQuestion(Question inParam)
+		public static async Task SaveQuestion(Question inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(inParam);
 		}
-	public static Question SaveTransientQuestion(Question inParam)
+		public static async Task MergeQuestion(Question inParam)
 		{
-			NHibernateSessionManager.Instance.GetSession().Merge(inParam);
-			return inParam;
+			await NHibernateSessionManager.Instance.GetSession().MergeAsync(inParam);
 		}
-	public static IList<Question> SaveQuestion(IList<Question> inParam)
+		public static async Task SaveQuestion(List<Question> inParam)
 		{
-			foreach (Question aQuestion in inParam)
+			foreach (Question _Question in inParam)
 			{
-				NHibernateSessionManager.Instance.GetSession().SaveOrUpdate(aQuestion);
+				await NHibernateSessionManager.Instance.GetSession().SaveOrUpdateAsync(_Question);
 			}
-			return inParam;
 		}
 
 

@@ -16,21 +16,9 @@ namespace TriviaGameWebAPI.BLL
             NHibernateSessionManager.Instance.BeginTransaction();
         }
 
-        private static void CommitTransaction()
+        private static async Task CommitTransaction()
         {
-            NHibernateSessionManager.Instance.CommitTransaction();
-        }
-
-        private static void RaiseServerError(string errorMessage)
-        {
-            try
-            {
-                throw new TriviaGameWebAPIException(errorMessage);
-            }
-            catch (TriviaGameWebAPIException)
-            {
-                throw;
-            }
+            await NHibernateSessionManager.Instance.CommitTransaction();
         }
 
         public static void InitialiseAppSettings(IConfiguration configuration)
@@ -53,13 +41,13 @@ namespace TriviaGameWebAPI.BLL
 
         public static class GenreHelper
         {
-            public static List<GenreResp> GetGenres()
+            public static async Task<List<GenreResp>> GetGenres()
             {
                 try
                 {
                     List<GenreResp> _genreResps = new List<GenreResp>();
 
-                    foreach (var genre in TriviaGameWebAPIDAL.GetAllGenre())
+                    foreach (var genre in await TriviaGameWebAPIDAL.GetAllGenre())
                     {
                         _genreResps.Add(FillGenreResp(genre));
                     }
@@ -68,7 +56,6 @@ namespace TriviaGameWebAPI.BLL
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
             }
@@ -98,15 +85,15 @@ namespace TriviaGameWebAPI.BLL
 
         public static class GameHelper
         {
-            public static GameResp CreateGame(string genreName)
+            public static async Task<GameResp> CreateGame(string genreName)
             {
                 try
                 {
-                    Genre _genre = TriviaGameWebAPIDAL.GetGenreByGenreName(genreName);
+                    Genre _genre = await TriviaGameWebAPIDAL.GetGenreByGenreName(genreName);
 
                     if (_genre is null)
                     {
-                        RaiseServerError("Invalid Genre Name. The resource has been removed, had its name changed, or is unavailable.");
+                        throw new Exception("Invalid Genre Name. The resource has been removed, had its name changed, or is unavailable.");
                     }
 
                     Game _game = new Game()
@@ -118,9 +105,9 @@ namespace TriviaGameWebAPI.BLL
 
                     BeginTransaction();
 
-                    TriviaGameWebAPIDAL.SaveGame(_game);
+                    await TriviaGameWebAPIDAL.SaveGame(_game);
 
-                    CommitTransaction();
+                    await CommitTransaction();
 
                     return FillGameResp(_game);
                 }
@@ -131,38 +118,38 @@ namespace TriviaGameWebAPI.BLL
                 }
             }
 
-            public static bool AnswerQuestion(AnswerQuestionReq answerQuestionReq)
+            public static async Task<bool> AnswerQuestion(AnswerQuestionReq answerQuestionReq)
             {
                 try
                 {
-                    Game _game = TriviaGameWebAPIDAL.GetGameById(answerQuestionReq.GameId);
+                    Game _game = await TriviaGameWebAPIDAL.GetGameById(answerQuestionReq.GameId);
 
                     if (_game is null)
                     {
-                        RaiseServerError("Invalid Game Id. The resource has been removed, had its name changed, or is unavailable.");
+                        throw new Exception("Invalid Game Id. The resource has been removed, had its name changed, or is unavailable.");
                     }
 
-                    Question _question = TriviaGameWebAPIDAL.GetQuestionById(answerQuestionReq.QuestionId);
+                    Question _question = await TriviaGameWebAPIDAL.GetQuestionById(answerQuestionReq.QuestionId);
 
                     if (_question is null)
                     {
-                        RaiseServerError("Invalid Question Id. The resource has been removed, had its name changed, or is unavailable.");
+                        throw new Exception("Invalid Question Id. The resource has been removed, had its name changed, or is unavailable.");
                     }
 
-                    if (TriviaGameWebAPIDAL.IsQuestionAnswered(answerQuestionReq.GameId, answerQuestionReq.QuestionId))
+                    if (await TriviaGameWebAPIDAL.IsQuestionAnswered(answerQuestionReq.GameId, answerQuestionReq.QuestionId))
                     {
-                        RaiseServerError("Question already answered");
+                        throw new Exception("Question already answered");
                     }
 
                     Choice _choice = null;
 
                     if (answerQuestionReq.ChoiceId != null)
                     {
-                        _choice = TriviaGameWebAPIDAL.GetChoiceById((Guid)answerQuestionReq.ChoiceId);
+                        _choice = await TriviaGameWebAPIDAL.GetChoiceById((Guid)answerQuestionReq.ChoiceId);
 
                         if (_choice is null)
                         {
-                            RaiseServerError("Invalid Choice Id. The resource has been removed, had its name changed, or is unavailable.");
+                            throw new Exception("Invalid Choice Id. The resource has been removed, had its name changed, or is unavailable.");
                         }
                     }
 
@@ -180,9 +167,9 @@ namespace TriviaGameWebAPI.BLL
 
                     BeginTransaction();
 
-                    TriviaGameWebAPIDAL.SaveAnswer(_answer);
+                    await TriviaGameWebAPIDAL.SaveAnswer(_answer);
 
-                    CommitTransaction();
+                    await CommitTransaction();
 
                     _game.Answers.Add(_answer);
 
@@ -195,22 +182,21 @@ namespace TriviaGameWebAPI.BLL
                 }
             }
 
-            public static GameResultResp ViewGame(Guid gameId)
+            public static async Task<GameResultResp> ViewGame(Guid gameId)
             {
                 try
                 {
-                    Game game = TriviaGameWebAPIDAL.GetGameById(gameId);
+                    Game _game = await TriviaGameWebAPIDAL.GetGameById(gameId);
 
-                    if (game is null)
+                    if (_game is null)
                     {
-                        RaiseServerError("Invalid Game Id. The resource has been removed, had its name changed, or is unavailable.");
+                        throw new Exception("Invalid Game Id. The resource has been removed, had its name changed, or is unavailable.");
                     }
 
-                    return FillGameResultResp(game);
+                    return FillGameResultResp(_game);
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
             }
@@ -224,7 +210,7 @@ namespace TriviaGameWebAPI.BLL
                         GameResp _gameResp = new GameResp()
                         {
                             GameId = game.GameId,
-                            CreationDate = game.CreationDate.ToString("dd-MMMM-yyyy hh:mm:ss"),
+                            CreationDate = game.CreationDate.ToString("dd-MMMM-yyyy hh:mm:ss tt"),
                             GenreName = game.GenreName
                         };
 
@@ -312,7 +298,7 @@ namespace TriviaGameWebAPI.BLL
                         {
                             GameId = game.GameId,
                             GenreName = game.GenreName,
-                            CreationDate = game.CreationDate.ToString("dd-MMMM-yyyy hh:mm:ss"),
+                            CreationDate = game.CreationDate.ToString("dd-MMMM-yyyy hh:mm:ss tt"),
                             TotalScore = game.TotalScore
                         };
 
