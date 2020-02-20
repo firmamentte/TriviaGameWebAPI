@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using TriviaGameWebAPI.Filters;
 
 namespace TriviaGameWebAPI
 {
@@ -27,11 +26,7 @@ namespace TriviaGameWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(new TriviaGameWebAPIErrorHandler());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSwaggerGen(swaggerGen => swaggerGen.SwaggerDoc("v1", new OpenApiInfo { Title = "Trivia Game Web API", Version = "v1" }));
         }
 

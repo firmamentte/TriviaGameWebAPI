@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +20,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/GetGenres")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GenreResp>>> GetGenres()
+        public async Task<ActionResult> GetGenres()
         {
             try
             {
@@ -52,7 +51,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/CreateGame")]
         [HttpPost]
-        public async Task<ActionResult<GameResp>> CreateGame([FromBody]string genreName)
+        public async Task<ActionResult> CreateGame([FromBody]string genreName)
         {
             try
             {
@@ -85,8 +84,7 @@ namespace TriviaGameWebAPI.Controllers
                 {
                     meta = new
                     {
-                        code = HttpStatusCode.Created,
-                        url = $"{Request.Scheme}://{Request.Host.Value}/api/TriviaGame/V1/ViewGame?gameId={ _gameResp.GameId }"
+                        code = HttpStatusCode.Created
                     },
                     data = _gameResp
                 });
@@ -106,7 +104,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/AnswerQuestion")]
         [HttpPut]
-        public async Task<ActionResult<bool>> AnswerQuestion([FromBody]AnswerQuestionReq answerQuestionReq)
+        public async Task<ActionResult> AnswerQuestion([FromBody]AnswerQuestionReq answerQuestionReq)
         {
             try
             {
@@ -181,7 +179,7 @@ namespace TriviaGameWebAPI.Controllers
 
         [Route("V1/ViewGame")]
         [HttpGet]
-        public async Task<ActionResult<GameResultResp>> ViewGame([FromQuery]Guid gameId)
+        public async Task<ActionResult> ViewGame([FromQuery]Guid gameId)
         {
             try
             {
