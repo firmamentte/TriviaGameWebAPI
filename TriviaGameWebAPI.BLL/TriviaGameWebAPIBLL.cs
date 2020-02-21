@@ -173,7 +173,7 @@ namespace TriviaGameWebAPI.BLL
 
                     _game.Answers.Add(_answer);
 
-                    return _choice == null ? false : _choice.IsCorrect;
+                    return _choice is null ? false : _choice.IsCorrect;
                 }
                 catch (Exception)
                 {
