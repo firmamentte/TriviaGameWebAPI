@@ -28,13 +28,13 @@ namespace TriviaGameWebAPI.Data
             try
             {
                 Question _question = await GetQuestionById(questionId);
+                Game _game = await GetGameById(gameId);
 
                 return
                 await NHibernateSessionManager.Instance.GetSession().
                 QueryOver<Answer>().
                 Where(answer => answer.Question == _question).
-                JoinQueryOver(answer => answer.Game).
-                Where(game => game.GameId == gameId).
+                And(answer => answer.Game == _game).
                 SingleOrDefaultAsync() != null;
             }
             catch (Exception)
