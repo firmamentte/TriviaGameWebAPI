@@ -61,7 +61,7 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (string.IsNullOrWhiteSpace(genreName))
                 {
-                    ModelState.AddModelError("GenreName", "Genre Name required");
+                    ModelState.AddModelError("GenreName", "genreName required");
                 }
 
                 if (!ModelState.IsValid)
@@ -114,31 +114,31 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (answerQuestionReq is null)
                 {
-                    ModelState.AddModelError("AnswerQuestionReq", "Answer Question request can not be null");
+                    ModelState.AddModelError("AnswerQuestionReq", "answerQuestionReq can not be null");
                 }
                 else
                 {
                     if (answerQuestionReq.GameId == Guid.Empty)
                     {
-                        ModelState.AddModelError("GameId", "Game Id must be a globally unique identifier and not empty");
+                        ModelState.AddModelError("GameId", "GameId must be a globally unique identifier and not empty");
                     }
 
                     if (answerQuestionReq.QuestionId == Guid.Empty)
                     {
-                        ModelState.AddModelError("QuestionId", "Question Id must be a globally unique identifier and not empty");
+                        ModelState.AddModelError("QuestionId", "QuestionId must be a globally unique identifier and not empty");
                     }
 
                     if (answerQuestionReq.ChoiceId != null)
                     {
                         if (answerQuestionReq.ChoiceId == Guid.Empty)
                         {
-                            ModelState.AddModelError("ChoiceId", "Choice Id must be a globally unique identifier and not empty");
+                            ModelState.AddModelError("ChoiceId", "ChoiceId must be a globally unique identifier and not empty");
                         }
                     }
 
                     if (answerQuestionReq.AnswerDuration < 0)
                     {
-                        ModelState.AddModelError("AnswerDuration", "Answer Duration can not be less than zero");
+                        ModelState.AddModelError("AnswerDuration", "AnswerDuration can not be less than zero");
                     }
                 }
 
@@ -189,7 +189,7 @@ namespace TriviaGameWebAPI.Controllers
 
                 if (gameId == Guid.Empty)
                 {
-                    ModelState.AddModelError("GameId", "Game Id must be a globally unique identifier and not empty");
+                    ModelState.AddModelError("GameId", "gameId must be a globally unique identifier and not empty");
                 }
 
                 if (!ModelState.IsValid)

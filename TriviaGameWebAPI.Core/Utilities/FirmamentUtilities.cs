@@ -198,6 +198,10 @@ namespace TriviaGameWebAPI.Core
         		{
         			throw;
         		}
+        		catch (Exception)
+        		{
+        			throw;
+        		}
         	}
 
 			public static void SendSMSViaEmail(string mailBody, string addrFrom, string addrFromPassword, string clientHost, int port, bool enableSsl, bool useDefaultCredentials)
@@ -230,6 +234,10 @@ namespace TriviaGameWebAPI.Core
 					client.Send(msg);
 				}
 				catch (SmtpException)
+				{
+					throw;
+				}
+				catch (Exception)
 				{
 					throw;
 				}

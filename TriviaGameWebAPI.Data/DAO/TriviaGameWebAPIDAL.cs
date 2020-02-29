@@ -33,12 +33,12 @@ namespace TriviaGameWebAPI.Data
 			QueryOver<Answer>().
 			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-		public static async Task<Answer> GetAnswerById(Guid Id)
+		public static async Task<Answer> GetAnswerById(Guid id)
 		{
 			return
 			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Answer>().
-			Where(entity => entity.AnswerId == Id).
+			Where(entity => entity.AnswerId == id).
 			SingleOrDefaultAsync();
 		}
 		public static async Task SaveAnswer(Answer inParam)
@@ -71,12 +71,12 @@ namespace TriviaGameWebAPI.Data
 			QueryOver<Choice>().
 			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-		public static async Task<Choice> GetChoiceById(Guid Id)
+		public static async Task<Choice> GetChoiceById(Guid id)
 		{
 			return
 			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Choice>().
-			Where(entity => entity.ChoiceId == Id).
+			Where(entity => entity.ChoiceId == id).
 			SingleOrDefaultAsync();
 		}
 		public static async Task SaveChoice(Choice inParam)
@@ -109,12 +109,12 @@ namespace TriviaGameWebAPI.Data
 			QueryOver<Game>().
 			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-		public static async Task<Game> GetGameById(Guid Id)
+		public static async Task<Game> GetGameById(Guid id)
 		{
 			return
 			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Game>().
-			Where(entity => entity.GameId == Id).
+			Where(entity => entity.GameId == id).
 			SingleOrDefaultAsync();
 		}
 		public static async Task SaveGame(Game inParam)
@@ -147,12 +147,12 @@ namespace TriviaGameWebAPI.Data
 			QueryOver<Genre>().
 			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-		public static async Task<Genre> GetGenreById(Guid Id)
+		public static async Task<Genre> GetGenreById(Guid id)
 		{
 			return
 			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Genre>().
-			Where(entity => entity.GenreId == Id).
+			Where(entity => entity.GenreId == id).
 			SingleOrDefaultAsync();
 		}
 		public static async Task SaveGenre(Genre inParam)
@@ -185,12 +185,12 @@ namespace TriviaGameWebAPI.Data
 			QueryOver<Question>().
 			ListAsync().ContinueWith(result => result.Result.ToList());
 		}
-		public static async Task<Question> GetQuestionById(Guid Id)
+		public static async Task<Question> GetQuestionById(Guid id)
 		{
 			return
 			await NHibernateSessionManager.Instance.GetSession().
 			QueryOver<Question>().
-			Where(entity => entity.QuestionId == Id).
+			Where(entity => entity.QuestionId == id).
 			SingleOrDefaultAsync();
 		}
 		public static async Task SaveQuestion(Question inParam)
