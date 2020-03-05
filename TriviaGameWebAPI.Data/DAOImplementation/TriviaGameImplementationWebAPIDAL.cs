@@ -35,7 +35,7 @@ namespace TriviaGameWebAPI.Data
                 QueryOver<Answer>().
                 Where(answer => answer.Question == _question).
                 And(answer => answer.Game == _game).
-                SingleOrDefaultAsync() != null;
+                RowCountAsync() > 0;
             }
             catch (Exception)
             {
